@@ -12,7 +12,9 @@ fn main() {
     for stream in listener.incoming() {
         let stream = stream.unwrap();
 
-        bootstrap(stream);
+        thread::spawn(|| {
+            bootstrap(stream);
+        });
     }
 }
 
