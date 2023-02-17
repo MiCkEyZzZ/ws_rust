@@ -1,6 +1,7 @@
 use std::{
     fs,
     io::prelude::*,
+    io::ErrorKind,
     net::{TcpListener, TcpStream},
     thread,
     time::Duration,
@@ -9,7 +10,21 @@ use std::{
 use ws_rust::ThreadPool;
 
 fn main() {
-    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+    let listener_result = TcpListener::bind("127.0.0.1:7878");
+
+    let listener = match listener_result {
+        Ok(l) => l,
+        Err(error) => match error.kind() {
+            ErrorKind::AddrNotAvailable => match TcpListener::bind("127.0.0.1:7878") {
+                Ok(l) => l,
+                Err(e) => panic!("Проблемы с привязкой к порту: {:?}", e),
+            },
+            other_error => {
+                panic!("Какая-то неведома проблема: {:?}", other_error);
+            }
+        },
+    };
+
     let pool = ThreadPool::new(4);
 
     for stream in listener.incoming().take(2) {

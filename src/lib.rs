@@ -17,7 +17,8 @@ impl ThreadPool {
     ///
     /// # Panics
     ///
-    /// Ф-я new будет паниковать, если размер будет равен нулю
+    /// Ф-я `new` будет паниковать, если размер будет равен нулю.
+    /// Ф-я `execute`
     pub fn new(size: usize) -> ThreadPool {
         assert!(size > 0);
 
@@ -89,5 +90,17 @@ impl Worker {
             id,
             thread: Some(thread),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        let result = 2 + 2;
+
+        assert_eq!(result, 4);
     }
 }
