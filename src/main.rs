@@ -1,22 +1,21 @@
 use std::{
     fs,
-    io::prelude::*,
-    io::ErrorKind,
+    io::{prelude::*, ErrorKind},
     net::{TcpListener, TcpStream},
     thread,
     time::Duration,
 };
-
 use ws_rust::ThreadPool;
 
+const BASE_URL: &str = "127.0.0.1:7878";
+
 fn main() {
-    const BASE_URL: &str = "127.0.0.1:7878";
-    let listener_result = TcpListener::bind(BASE_URL);
+    let listener_result = TcpListener::bind(&BASE_URL);
 
     let listener = match listener_result {
         Ok(l) => l,
         Err(error) => match error.kind() {
-            ErrorKind::AddrNotAvailable => match TcpListener::bind(BASE_URL) {
+            ErrorKind::AddrNotAvailable => match TcpListener::bind(&BASE_URL) {
                 Ok(l) => l,
                 Err(e) => panic!("Проблемы с привязкой к порту: {:?}", e),
             },
