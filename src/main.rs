@@ -57,7 +57,12 @@ fn bootstrap(mut stream: TcpStream) {
         ("HTTP/1.1 404 NOT FOUND", "404.html")
     };
 
-    let contents = fs::read_to_string(filename).unwrap();
+    let contents_result = fs::read_to_string(filename);
+
+    let contents = match contents_result {
+        Ok(c) => c,
+        Err(e) => panic!("Возникла какая-то ошибка: {}", e),
+    };
 
     let response = format!(
         "{}\r\nContent-Length: {}\r\n\r\n{}",
