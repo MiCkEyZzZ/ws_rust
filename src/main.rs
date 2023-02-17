@@ -29,7 +29,10 @@ fn main() {
     let pool = ThreadPool::new(4);
 
     for stream in listener.incoming().take(2) {
-        let stream = stream.unwrap();
+        let stream = match stream {
+            Ok(s) => s,
+            Err(e) => panic!("Возникла какая-то проблемка! {:?}", e),
+        };
 
         pool.execute(|| {
             bootstrap(stream);
