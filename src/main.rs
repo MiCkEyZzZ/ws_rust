@@ -10,12 +10,13 @@ use std::{
 use ws_rust::ThreadPool;
 
 fn main() {
-    let listener_result = TcpListener::bind("127.0.0.1:7878");
+    const BASE_URL: &str = "127.0.0.1:7878";
+    let listener_result = TcpListener::bind(BASE_URL);
 
     let listener = match listener_result {
         Ok(l) => l,
         Err(error) => match error.kind() {
-            ErrorKind::AddrNotAvailable => match TcpListener::bind("127.0.0.1:7878") {
+            ErrorKind::AddrNotAvailable => match TcpListener::bind(BASE_URL) {
                 Ok(l) => l,
                 Err(e) => panic!("Проблемы с привязкой к порту: {:?}", e),
             },
